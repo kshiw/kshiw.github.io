@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    #myCanvas{
+        margin: 0 auto;
+        display: block;
+    }
+</style>
+<body>
+<canvas id="myCanvas">当前浏览器不支持canvas组件请升级！</canvas>
+<script>
+	//方法一：arc 动态画圆
+	var c = document.getElementById('myCanvas');
+	var ctx = c.getContext('2d');
+	var mW = c.width = 300;
+	var mH = c.height = 300;
+	var lineWidth = 15;
+	var st = 0;
+	var r = mW / 2; //中间位置
+	var cR = r - 4 * lineWidth; //圆半径
+	var startAngle = -(1 / 2 * Math.PI); //开始角度
+	var endAngle = startAngle + 2 * Math.PI; //结束角度
+	var xAngle = 1 * (Math.PI / 30); //偏移角度量
+	var fontSize = 35; //字号大小
+	var tmpAngle = startAngle; //临时角度变量
+    var yuan,times = null
+	window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+	//渲染函数
+	var rander = function(){
+		yuan = requestAnimationFrame(rander);
+		if(tmpAngle >= endAngle){
+			cancelAnimationFrame(yuan)
+			ctx.lineWidth = 13;
+			ctx.beginPath()
+			ctx.moveTo(100,145)
+            times = requestAnimationFrame(function randers() {
+				times = requestAnimationFrame(randers)
+                st++
+				// 打钩
+				if (st <= 10) {
+					if (st == 10) {
+						ctx.arcTo(140,175,150,165,10)
+                    }
+					ctx.lineTo(100+st*4,145+st*3)
+                } else if(st >10 && st<33) {
+					ctx.lineTo(130+st*2,185-st*2)
+                } else {
+					cancelAnimationFrame(times)
+                }
+				ctx.stroke();
+            })
+            return
+		}else if(tmpAngle + xAngle > endAngle){
+			tmpAngle = endAngle;
+		}else{
+			tmpAngle += xAngle;
+		}
+		ctx.clearRect(0, 0, mW, mH);
+		//画圈
+		ctx.beginPath();
+		ctx.lineCap="round";
+		ctx.lineWidth = lineWidth;
+		// ctx.ra
+		ctx.strokeStyle = '#1c86d1';
+		ctx.arc(r, r, cR, startAngle, tmpAngle);
+		ctx.stroke();
+		ctx.closePath();
+	};
+	rander();
+</script>
+</body>
+</html>

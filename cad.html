@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="myDiv">
+    <label for="set"><input id="set" value="0"></label>
+    <button id="btn">开始</button>
+    <button id="reset">重置</button>
+</div>
+<script>
+    var btn = document.getElementById('btn')
+    var reset = document.getElementById('reset')
+
+	var timer;
+	var con = 'off';
+	//ori表示初始的系统时间
+	var ori;
+	//dis表示当前运行时的秒数(动态)
+	var dis = 0;
+	//last储存暂停时的秒数(静态)
+	var last = 0;
+	set.setAttribute('disabled','disabled');
+	con = 'on';
+	btn.innerHTML = '暂停';
+	//保留已经走过的秒数的系统时间
+	ori = (new Date()).getTime() - last;
+	timer = requestAnimationFrame(function fn(){
+		dis = (new Date()).getTime() - ori;
+		// cancelAnimationFrame(timer);
+		timer = requestAnimationFrame(fn);
+		var minute = Math.floor(dis/1000/60);
+		var second = Math.floor(dis/1000);
+		var ms = Math.floor(dis%1000);
+		if (second >= 3) {
+			console.log('zhr')
+			cancelAnimationFrame(timer);
+		} else {
+			set.value = minute + ' : ' + second + ' . ' + ms;
+        }
+	});
+	reset.onclick = function(){
+		history.go();
+	}
+	btn.onclick = function(){
+		if(con === 'off'){
+
+		}else{
+			cancelAnimationFrame(timer);
+			btn.innerHTML = '开始';
+			con = 'off';
+			last = dis;
+		}
+	}
+</script>
+</body>
+</html>

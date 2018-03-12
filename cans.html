@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>requestAnimationFrame动画效果</title>
+    <script type="text/javascript">
+		function animaFuns(){
+			var requestAnimFrame = (function(){
+				return window.requestAnimationFrame ||
+					window.webkitRequestAnimationFrame ||
+					window.mozRequestAnimationFrame ||
+					window.oRequestAnimationFrame ||
+					window.msRequestAnimationFrame || setAnimationFuns;
+			})();
+			console.log(requestAnimFrame);
+			//备胎函数，主要用于不兼容requestAnimationFrame方法的函数
+			function setAnimationFuns(callback){
+				window.setTimeout(callback,5);
+			}
+			//定义变量canvas，context;
+			var canvas=null,context=null,i=0,R=180,int=null;
+			//初始化canvas画布
+			function init(){
+				canvas=document.createElement("canvas");
+				canvas.width=456;
+				canvas.height=456;
+				context=canvas.getContext("2d");
+				document.body.appendChild(canvas);
+			}
+			//绘制canvas小球
+			function draw(){
+				i+=0.02;
+				if(i<2){
+					var PI=Math.PI*i;
+				}else if(i>=2 ){
+					console.log('adasd')
+					i=0;
+					cancelAnimationFrame(int)
+					int = null
+				}
+				var x = Math.sin(PI)*R+225;
+				var y = Math.cos(PI)*R+225;
+				context.fillStyle='#eee';
+				context.fillRect(0,0,456,456);
+				context.fillStyle='rgb(255,0,0)';
+				context.beginPath();
+				context.arc(x,y,20,0,Math.PI*2,true);
+				context.closePath();
+				context.fill();
+			}
+			//定义动画函数
+			function animate(){
+				draw();
+				cancelAnimationFrame(int)
+				int=requestAnimFrame(animate);
+			}
+			//定义开始，暂停动画
+			var stopDom=document.getElementById("stopAnimation");
+			var startDom=document.getElementById("startAnimation");
+			stopDom.onclick=function(){
+				cancelAnimationFrame(int);
+			}
+			startDom.onclick=function(){
+				cancelAnimationFrame(int);    //清除动画行为，类似于clearInterval()方法。
+				int=requestAnimationFrame(animate);
+			}
+			init();
+			animate();
+		}
+		window.onload=function(){
+			animaFuns();
+		}
+    </script>
+    <style type="text/css">
+        canvas {
+            display: block;
+            margin:0 auto;
+        }
+        #box {
+            margin-top: 100px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<div id="box">
+    <button type="button" id="startAnimation">开始动画</button>
+    <button type="button" id="stopAnimation">停止动画</button>
+</div>
+</body>
+</html>
